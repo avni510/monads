@@ -9,6 +9,14 @@ class MIO
     value.nil?
   end
 
+  def bind(function)
+    if self.empty?
+      MIO.new_empty
+    else
+      function.call(self.value)
+    end
+  end
+
   class << self
 
     def get_line
@@ -35,11 +43,7 @@ class MIO
       begin
         file = File.open(filename) do |f1|
           contents = IO.read(filename)
-          if contents.nil?
-            MIO.new_empty
-          else
-            MIO.new(contents)
-          end
+          contents.nil? ? MIO.new_empty : MIO.new(contents)
         end
       rescue Exception
         MIO.new_empty
@@ -50,14 +54,6 @@ class MIO
       puts contents
       MIO.new_empty
     }
-
-    def bind(mio, function)
-      if mio.empty?
-        MIO.new_empty
-      else
-        function.call(mio.value)
-      end
-    end
   end
 end
 

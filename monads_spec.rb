@@ -66,7 +66,7 @@ describe "Monads" do
     it "is empty for an empty MIO" do
       monad_io = MIO.new_empty
 
-      expect(MIO.bind(monad_io, MIO.get_contents).empty?).to eq(true)
+      expect(monad_io.bind(MIO.get_contents).empty?).to eq(true)
     end
 
     it "returns an MIO with value if it a value is passed in" do
@@ -77,8 +77,21 @@ describe "Monads" do
 
       monad_io = MIO.new(file_path)
 
-      expect(MIO.bind(monad_io, MIO.get_contents).empty?).to eq(false)
-      expect(MIO.bind(monad_io, MIO.get_contents).value).to eq("bar")
+      expect(monad_io.bind(MIO.get_contents).empty?).to eq(false)
+      expect(monad_io.bind(MIO.get_contents).value).to eq("bar")
+      file.unlink
+    end
+
+    it "can be chained together" do
+      FakeIO.set_value("foo")
+      file = Tempfile.new("foo")
+      file_path = file.path
+      file.write("hello world")
+      file.close
+
+      expect(MIO.get_line.call()
+              .bind(MIO.get_contents)
+              .bind(MIO.puts_str).empty?).to eq(true)
       file.unlink
     end
   end
