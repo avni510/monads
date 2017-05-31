@@ -41,7 +41,7 @@ class MIO
 
     def puts_str
       lambda do |contents|
-        puts contents
+        FakeIO.puts contents
         MIO.new_empty
       end
     end
@@ -55,6 +55,7 @@ end
 
 class FakeIO
   @value = nil
+  @puts_results = []
 
   def self.gets
     @value
@@ -62,5 +63,9 @@ class FakeIO
 
   def self.set_value(value)
     @value = value
+  end
+
+  def self.puts(value)
+    @puts_results << value
   end
 end
