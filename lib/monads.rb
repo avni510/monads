@@ -20,40 +20,36 @@ class MIO
   class << self
 
     def get_line
-      @@get_line
+      lambda do
+        user_input = FakeIO.gets
+        MIO.new(user_input)
+      end
     end
 
     def get_contents
-      @@get_contents
+      lambda do |filename|
+        begin
+          file = File.open(filename) do |f1|
+            contents = IO.read(filename)
+            contents.nil? ? MIO.new_empty : MIO.new(contents)
+          end
+        rescue Exception
+          MIO.new_empty
+        end
+      end
     end
 
     def puts_str
-      @@puts_str
+      lambda do |contents|
+        puts contents
+        MIO.new_empty
+      end
     end
 
     def new_empty
       self.new(nil)
     end
 
-    @@get_line = lambda {
-      user_input = FakeIO.gets
-      MIO.new(user_input) }
-
-    @@get_contents = lambda { |filename|
-      begin
-        file = File.open(filename) do |f1|
-          contents = IO.read(filename)
-          contents.nil? ? MIO.new_empty : MIO.new(contents)
-        end
-      rescue Exception
-        MIO.new_empty
-      end
-    }
-
-    @@puts_str = lambda { |contents|
-      puts contents
-      MIO.new_empty
-    }
   end
 end
 
