@@ -21,7 +21,7 @@ class MIO
 
     def get_line
       lambda do
-        user_input = FakeIO.gets
+        user_input = STDIN.gets
         MIO.new(user_input)
       end
     end
@@ -41,7 +41,7 @@ class MIO
 
     def puts_str
       lambda do |contents|
-        FakeIO.puts contents
+        STDOUT.puts contents
         MIO.new_empty
       end
     end
@@ -50,22 +50,5 @@ class MIO
       self.new(nil)
     end
 
-  end
-end
-
-class FakeIO
-  @value = nil
-  @puts_results = []
-
-  def self.gets
-    @value
-  end
-
-  def self.set_value(value)
-    @value = value
-  end
-
-  def self.puts(value)
-    @puts_results << value
   end
 end

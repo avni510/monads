@@ -18,13 +18,13 @@ describe "Monads" do
 
   describe ".get_line" do
     it "is empty when no user input received" do
-      FakeIO.set_value(nil)
+      expect(STDIN).to receive(:gets) { nil }
 
       expect(MIO.get_line.call.empty?).to eq(true)
     end
 
     it "is contains value when user input is received" do
-      FakeIO.set_value("hi")
+      expect(STDIN).to receive(:gets) { "hi" }
 
       expect(MIO.get_line.call.value).to eq("hi")
     end
@@ -53,11 +53,13 @@ describe "Monads" do
   describe ".puts_str" do
     it "is empty for a nil value" do
       contents = nil
+      expect(STDOUT).to receive(:puts).with(contents)
       expect(MIO.puts_str.call(contents).empty?).to eq(true)
     end
 
     it "is empty for contents that have a value" do
       contents = "hi"
+      expect(STDOUT).to receive(:puts).with(contents)
       expect(MIO.puts_str.call(contents).empty?).to eq(true)
     end
   end
@@ -83,7 +85,7 @@ describe "Monads" do
     end
 
     it "can be chained together" do
-      FakeIO.set_value("foo")
+      expect(STDIN).to receive(:gets) { "foo" }
       file = Tempfile.new("foo")
       file_path = file.path
       file.write("hello world")
