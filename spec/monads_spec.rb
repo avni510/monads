@@ -1,4 +1,4 @@
-require './monads'
+require 'monads'
 require 'tempfile'
 
 describe "Monads" do
